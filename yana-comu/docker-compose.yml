@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: yana_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: yana
+      POSTGRES_PASSWORD: yanasan
+      POSTGRES_DB: yana_db
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    networks:
+      - yana-network
+
+  adminer:
+    image: adminer
+    container_name: yana-admi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - yana-network
+  voicevox:
+    image: voicevox/voicevox_engine:cpu-arm64-latest
+    ports:
+      - "50021:50021"
+
+networks:
+  yana-network:
+    driver: bridge

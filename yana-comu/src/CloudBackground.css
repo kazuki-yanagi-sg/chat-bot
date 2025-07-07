@@ -1,0 +1,125 @@
+/* 背景全体の空グラデ */
+/* .sky-background { */
+/* position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #cceeff, #fef6ff);
+  z-index: -1;
+  overflow: hidden;
+} */
+
+/* 雲 */
+.cloud {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.8;
+  box-shadow: 30px 10px 0px 0px #fff, 60px 20px 0px 0px #fff;
+  width: 60px;
+  height: 40px;
+  animation: floatCloud 60s linear infinite;
+}
+
+.cloud1 {
+  top: 20%;
+  left: -100px;
+  animation-delay: 0s;
+}
+.cloud2 {
+  top: 40%;
+  left: -150px;
+  animation-delay: 10s;
+}
+.cloud3 {
+  top: 60%;
+  left: -200px;
+  animation-delay: 20s;
+}
+.cloud4 {
+  top: 80%;
+  left: -250px;
+  animation-delay: 30s;
+}
+
+@keyframes floatCloud {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(150vw);
+  }
+}
+
+/* 星をキラッとした形に */
+.star {
+  position: absolute;
+  width: 0;
+  height: 0;
+  color: gold;
+  animation: twinkle 4s ease-in-out infinite alternate;
+  opacity: 0.7;
+  transition: opacity 2s ease;
+}
+
+.star::before {
+  transform: rotate(30deg);
+}
+
+.star::after {
+  transform: rotate(-30deg);
+}
+
+/* 夜にのみ表示する */
+.show-stars .star {
+  opacity: 1;
+}
+
+.hide-stars .star {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.star1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+.star2 {
+  top: 30%;
+  left: 60%;
+  animation-delay: 1s;
+}
+.star3 {
+  top: 50%;
+  left: 90%;
+  animation-delay: 2s;
+}
+
+.star4 {
+  top: 80%;
+  left: 70%;
+  animation-delay: 2s;
+}
+
+.star5 {
+  top: 75%;
+  left: 5%;
+  animation-delay: 2s;
+}
+
+@keyframes twinkle {
+  0% {
+    transform: rotate(35deg) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: rotate(35deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(35deg) scale(1);
+    opacity: 0.7;
+  }
+}

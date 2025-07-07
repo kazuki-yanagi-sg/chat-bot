@@ -1,0 +1,64 @@
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: #ffe4e1; ピンク系背景 */
+  z-index: 1;
+}
+
+.login-form {
+  background-color: #fff0f5;
+  padding: 2rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.form-title {
+  text-align: center;
+  color: #d46a92;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+}
+
+.form-row label {
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.form-row input {
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 0.6rem;
+  font-size: 1rem;
+  transition: border 0.3s;
+}
+
+.form-row input:focus {
+  border: 1px solid #d46a92;
+  outline: none;
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #d46a92;
+  color: white;
+  border: none;
+  border-radius: 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #c1557d;
+}

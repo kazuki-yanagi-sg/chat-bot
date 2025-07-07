@@ -1,0 +1,178 @@
+/* ===== チャットコンテナ（背景アニメ付き） ===== */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 15rem);
+  width: 500px;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  margin-top: 9rem;
+  margin-left: 25%;
+  margin-right: 25%;
+  padding: 2rem;
+  border: solid pink 0.2rem;
+  border-radius: 16px;
+}
+
+/* ===== パワパフ風アニメーション背景 ===== */
+.chat-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(45deg, #ff69b4, #ff69b4 10%, #7ec8e3 10%, #7ec8e3 20%, #98fb98 20%, #98fb98 30%);
+  z-index: -1;
+  animation: powerpuffMove 15s linear infinite;
+  opacity: 0.2;
+  transform: rotate(15deg);
+}
+
+/* ===== ハート型マスクを使った縞模様のレイヤー ===== */
+.chat-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(-45deg, rgba(255, 182, 193, 0.2), rgba(255, 182, 193, 0.2) 10%, rgba(255, 105, 180, 0.2) 10%, rgba(255, 105, 180, 0.2) 20%);
+  z-index: -1;
+  animation: floatHearts 20s linear infinite;
+  opacity: 0.4;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='M50 91s-1-.5-2-1.5C26 71 10 56 10 36c0-11 9-20 20-20 7 0 13 5 20 13 7-8 13-13 20-13 11 0 20 9 20 20 0 20-16 35-38 53-1 .9-2 1.5-2 1.5z'/></svg>");
+  -webkit-mask-repeat: repeat;
+  -webkit-mask-size: 200px;
+  mask-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><path fill='white' d='M50 91s-1-.5-2-1.5C26 71 10 56 10 36c0-11 9-20 20-20 7 0 13 5 20 13 7-8 13-13 20-13 11 0 20 9 20 20 0 20-16 35-38 53-1 .9-2 1.5-2 1.5z'/></svg>");
+  mask-repeat: repeat;
+  mask-size: 200px;
+}
+
+@keyframes powerpuffMove {
+  from {
+    transform: translate(0, 0) rotate(15deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(15deg);
+  }
+}
+
+@keyframes floatHearts {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-20%, -10%);
+  }
+}
+
+/* ===== チャットログ ===== */
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* ===== メッセージ全体ブロック（吹き出し＋アバター） ===== */
+.chat-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.chat-row.user {
+  align-items: flex-end;
+}
+
+.message-block {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.message-block.left {
+  align-items: flex-start;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+
+.message-block.right {
+  align-items: flex-end;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+/* ===== アバターと名前（上に表示） ===== */
+.avatar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.avatar-wrapper.top-left {
+  justify-content: flex-start;
+}
+
+.avatar-wrapper.top-right {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.user-name {
+  font-size: 18px;
+  color: #ff69b4;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-weight: bold;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* ===== 吹き出し ===== */
+.chat-bubble {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.chat-bubble.user {
+  background-color: #f8dfff;
+  color: #333;
+  border-bottom-right-radius: 0;
+}
+
+.chat-bubble.bot {
+  background-color: #c8f5ff;
+  color: #333;
+  border-bottom-left-radius: 0;
+}
+
+/* ===== 入力欄 ===== */
+.chat-input {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.chat-input button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: #ff69b4;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
