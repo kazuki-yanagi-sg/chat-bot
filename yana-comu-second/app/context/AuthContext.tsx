@@ -6,6 +6,7 @@ interface User {
   id: number;
   name: string;
   icon: string;
+  role: boolean;
 }
 
 interface AuthContextType {

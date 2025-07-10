@@ -6,6 +6,9 @@ import { useAuth } from "@/context/AuthContext";
 import ChatModal from "@/components/Chat/ChatModal";
 import SignUpModal from "@/components/forms/SignUpModal";
 import SettingModal from "@/components/forms/SettingModal";
+import AdminModal from "@/components/admin/AdminModal";
+import LoginModal from "@/components/forms/LoginModal";
+import AISetting from "./admin/AISetting";
 
 export default function Header() {
   const [speakers, setSpeakers] = useState<{ id: number; character: string; state?: string }[]>([]);
@@ -22,22 +25,26 @@ export default function Header() {
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      setIsTabletSidebar(width <= 1073 && width > 640);
+      setIsTabletSidebar(width <= 1329 && width > 640);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const { isAuthenticated, setAuthenticated, user } = useAuth();
+  const { isAuthenticated, setAuthenticated, user, setUser } = useAuth();
   const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
   const [isChatModalOpen, setChatModalOpen] = useState(false);
   const [isSettingModalOpen, setSettingModalOpen] = useState(false);
   const [selectedSpeaker, setSelectedSpeaker] = useState<number>(46);
+  const [isAdminModalOpen, setAdminModalOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const [isAISettingModalOpen, setAISettingModalOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setAuthenticated(false);
+    setUser(null);
   };
 
   const handleSpeakerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -58,12 +65,12 @@ export default function Header() {
           <div className="text-3xl font-bold text-pink-700 tracking-wide select-none" style={{ fontFamily: "'Baloo 2', cursive" }}>
             YANAYANA 🐾
           </div>
-          <Link href="/" className="block text-pink-700 font-semibold">
+          <Link href="/" className="block text-pink-700 font-semibold rounded-full bg-zinc-100 p-2 text-center w-full">
             ホーム
           </Link>
           {isAuthenticated && (
             <>
-              <button onClick={() => setChatModalOpen(true)} className="block text-pink-700">
+              <button onClick={() => setChatModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
                 AIちゃんと会話
               </button>
               <select value={selectedSpeaker} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
@@ -74,20 +81,30 @@ export default function Header() {
                   </option>
                 ))}
               </select>
-              <button onClick={() => setSettingModalOpen(true)} className="block text-pink-700">
+              <button onClick={() => setSettingModalOpen(true)} className="block text-pink-700  rounded-full bg-zinc-100 p-2 text-center w-full">
                 ユーザ情報設定
               </button>
-              <button onClick={handleLogout} className="block text-pink-700">
+              <button onClick={handleLogout} className="block text-pink-700  rounded-full bg-zinc-100 p-2 text-center w-full">
                 ログアウト
               </button>
             </>
           )}
+          {user && user.role == true && (
+            <>
+              <button onClick={() => setAdminModalOpen(true)} className="block text-pink-700  rounded-full bg-zinc-100 p-2 text-center w-full">
+                ユーザー管理
+              </button>
+              <button onClick={() => setAISettingModalOpen(true)} className="block text-pink-700  rounded-full bg-zinc-100 p-2 text-center w-full">
+                AI性格設定
+              </button>{" "}
+            </>
+          )}
           {!isAuthenticated && (
             <>
-              <Link href="/login" className="block text-pink-700 font-semibold">
+              <button onClick={() => setLoginModalOpen(true)} className="block text-pink-700 font-semibold  rounded-full bg-zinc-100 p-2 text-center w-full">
                 ログイン
-              </Link>
-              <button onClick={() => setSignUpModalOpen(true)} className="block text-pink-700 font-semibold">
+              </button>
+              <button onClick={() => setSignUpModalOpen(true)} className="block text-pink-700 font-semibold  rounded-full bg-zinc-100 p-2 text-center w-full">
                 登録
               </button>
             </>
@@ -98,57 +115,73 @@ export default function Header() {
       {/* モバイル用スライドメニュー */}
       {!isTabletSidebar && (
         <>
-          {menuOpen && <div onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>}
-          <div className={`fixed top-0 left-0 h-full w-64 bg-white z-50 transform transition-transform duration-300 ${menuOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
-            <div className="p-4 space-y-4">
-              <Link href="/" onClick={() => setMenuOpen(false)} className="block text-pink-700 font-semibold">
-                ホーム
-              </Link>
-              {isAuthenticated && (
-                <>
-                  <button onClick={() => setChatModalOpen(true)} className="block text-pink-700">
-                    AIちゃんと会話
-                  </button>
-                  <select value={selectedSpeaker} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
-                    {speakers.map((sp) => (
-                      <option key={sp.id} value={sp.id}>
-                        {sp.character}
-                        {sp.state ? `(${sp.state})` : ""}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={() => {
-                      setSettingModalOpen(true);
-                      setMenuOpen(false);
-                    }}
-                    className="block text-pink-700"
-                  >
-                    ユーザ情報設定
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setMenuOpen(false);
-                    }}
-                    className="block text-pink-700"
-                  >
-                    ログアウト
-                  </button>
-                </>
-              )}
-              {!isAuthenticated && (
-                <>
-                  <Link href="/login" className="block text-pink-700 font-semibold">
-                    ログイン
+          {menuOpen && (
+            <div onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-black bg-opacity-50 z-40">
+              <div className="fixed top-0 left-0 w-64 h-full bg-pink-100 p-4 shadow-lg z-40 space-y-4">
+                <div className="p-4 space-y-4">
+                  <div className="text-3xl font-bold text-pink-700 tracking-wide select-none" style={{ fontFamily: "'Baloo 2', cursive" }}>
+                    YANAYANA 🐾
+                  </div>
+                  <Link href="/" onClick={() => setMenuOpen(false)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
+                    ホーム
                   </Link>
-                  <button onClick={() => setChatModalOpen(true)} className="block text-pink-700 font-semibold">
-                    登録
-                  </button>
-                </>
-              )}
+                  {isAuthenticated && (
+                    <>
+                      <button onClick={() => setChatModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
+                        AIちゃんと会話
+                      </button>
+                      <select value={selectedSpeaker} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
+                        {speakers.map((sp) => (
+                          <option key={sp.id} value={sp.id}>
+                            {sp.character}
+                            {sp.state ? `(${sp.state})` : ""}
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => {
+                          setSettingModalOpen(true);
+                          setMenuOpen(false);
+                        }}
+                        className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full"
+                      >
+                        ユーザ情報設定
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMenuOpen(false);
+                        }}
+                        className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full"
+                      >
+                        ログアウト
+                      </button>
+                    </>
+                  )}
+                  {user && user.role == true && (
+                    <>
+                      <button onClick={() => setAdminModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
+                        ユーザー管理
+                      </button>
+                      <button onClick={() => setAISettingModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
+                        AI性格設定
+                      </button>
+                    </>
+                  )}
+                  {!isAuthenticated && (
+                    <>
+                      <button onClick={() => setLoginModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
+                        ログイン
+                      </button>
+                      <button onClick={() => setChatModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
+                        登録
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
           {/* ハンバーガーボタン */}
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-pink-700 focus:outline-none ml-auto absolute top-4 right-4 z-50">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -188,9 +221,9 @@ export default function Header() {
             )}
             {!isAuthenticated ? (
               <>
-                <Link href="/login" className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
+                <button onClick={() => setLoginModalOpen(true)} className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
                   ログイン
-                </Link>
+                </button>
                 <button onClick={() => setSignUpModalOpen(true)} className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
                   登録
                 </button>
@@ -203,9 +236,19 @@ export default function Header() {
                 <button onClick={() => setSettingModalOpen(true)} className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
                   ユーザ情報設定
                 </button>
-                {userIconUrl && <img src={userIconUrl} alt="ユーザーアイコン" className="w-10 h-10 rounded-full border-2 border-pink-400 shadow-md ml-4" />}
               </>
             )}
+            {user && user.role == true && (
+              <>
+                <button onClick={() => setAdminModalOpen(true)} className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
+                  ユーザー管理
+                </button>
+                <button onClick={() => setAISettingModalOpen(true)} className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
+                  AI性格設定
+                </button>
+              </>
+            )}
+            {isAuthenticated && <>{userIconUrl && <img src={userIconUrl} alt="ユーザーアイコン" className="w-10 h-10 rounded-full border-2 border-pink-400 shadow-md ml-4" />}</>}
           </nav>
         </header>
       )}
@@ -213,7 +256,10 @@ export default function Header() {
       {/* モーダル */}
       <SignUpModal isOpen={isSignUpModalOpen} onClose={() => setSignUpModalOpen(false)} />
       <ChatModal isOpen={isChatModalOpen} onClose={() => setChatModalOpen(false)} userIconUrl={userIconUrl} selectedSpeaker={selectedSpeaker} />
-      {user && <SettingModal isOpen={isSettingModalOpen} onClose={() => setSettingModalOpen(false)} userId={user.id} currentName={user.name} currentIconUrl={`http://localhost:8000/user_icons/${user.icon}`} onUpdateSuccess={() => {}} />}
+      <AdminModal isOpen={isAdminModalOpen} onClose={() => setAdminModalOpen(false)} selectedSpeaker={selectedSpeaker} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} />
+      {user && <SettingModal isOpen={isSettingModalOpen} onClose={() => setSettingModalOpen(false)} userId={user.id} currentName={user.name} currentIconUrl={userIconUrl} onUpdateSuccess={() => {}} />}
+      <AISetting isOpen={isAISettingModalOpen} onClose={() => setAISettingModalOpen(false)} selectedSpeaker={selectedSpeaker} />
     </div>
   );
 }
