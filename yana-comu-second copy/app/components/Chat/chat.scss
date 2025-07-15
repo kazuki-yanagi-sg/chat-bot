@@ -1,0 +1,14 @@
+.bg-chat-pattern {
+  background-image: repeating-linear-gradient(45deg, #ffe4e1 0 10px, #ffb6c1 10px 20px, #ffd700 20px 30px, #98fb98 30px 40px, #87cefa 40px 50px);
+  background-size: 200% 200%;
+  animation: chatBackgroundMove 10s linear infinite;
+}
+
+@keyframes chatBackgroundMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}

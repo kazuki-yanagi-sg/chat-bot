@@ -6,7 +6,7 @@ interface ChatModalProps {
   isOpen: boolean;
   onClose: () => void;
   userIconUrl?: string;
-  selectedSpeaker: number;
+  selectedSpeakerId: number;
 }
 
 interface Message {
@@ -23,7 +23,7 @@ interface AffiliateAdModalProps {
 
 const AI_ICON_URL = "http://localhost:8000/icon/AI.jpeg";
 
-export default function ChatModal({ isOpen, onClose, userIconUrl, selectedSpeaker }: ChatModalProps) {
+export default function ChatModal({ isOpen, onClose, userIconUrl, selectedSpeakerId }: ChatModalProps) {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([{ id: 0, text: "こんにちは、何を話したいですか？🌸", sender: "ai", iconUrl: AI_ICON_URL }]);
@@ -48,7 +48,7 @@ export default function ChatModal({ isOpen, onClose, userIconUrl, selectedSpeake
       const res = await fetch("http://localhost:8000/communication", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_input: input, speaker: selectedSpeaker }),
+        body: JSON.stringify({ user_input: input, speaker: selectedSpeakerId }),
       });
 
       if (!res.ok) throw new Error("通信失敗");

@@ -13,6 +13,10 @@ click==8.2.1
 Deprecated==1.2.18
 dotenv==0.9.9
 fastapi==0.115.14
+python-jose==3.3.0
+passlib==1.7.4
+python-multipart==0.0.9
+SQLAlchemy==2.0.28
 filelock==3.18.0
 frozenlist==1.7.0
 fsspec==2025.5.1

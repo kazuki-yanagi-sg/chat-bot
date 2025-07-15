@@ -36,7 +36,8 @@ export default function Header() {
   const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
   const [isChatModalOpen, setChatModalOpen] = useState(false);
   const [isSettingModalOpen, setSettingModalOpen] = useState(false);
-  const [selectedSpeaker, setSelectedSpeaker] = useState<number>(46);
+  const [selectedSpeakerId, setSelectedSpeakerId] = useState<number>(46);
+  const [selectedSpeakerCharacter, setselectedSpeakerCharacter] = useState<String>("");
   const [isAdminModalOpen, setAdminModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isAISettingModalOpen, setAISettingModalOpen] = useState(false);
@@ -49,7 +50,12 @@ export default function Header() {
 
   const handleSpeakerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const speakerId = Number(e.target.value);
-    setSelectedSpeaker(speakerId);
+    setSelectedSpeakerId(speakerId);
+    const selected = speakers.find((sp) => sp.id === speakerId);
+    if (selected) {
+      setselectedSpeakerCharacter(selected.character);
+    }
+
     localStorage.setItem("voiceSpeaker", speakerId.toString());
   };
 
@@ -73,7 +79,7 @@ export default function Header() {
               <button onClick={() => setChatModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
                 AIちゃんと会話
               </button>
-              <select value={selectedSpeaker} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
+              <select value={selectedSpeakerId} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
                 {speakers.map((sp) => (
                   <option key={sp.id} value={sp.id}>
                     {sp.character}
@@ -130,7 +136,7 @@ export default function Header() {
                       <button onClick={() => setChatModalOpen(true)} className="block text-pink-700 rounded-full bg-zinc-100 p-2 text-center w-full">
                         AIちゃんと会話
                       </button>
-                      <select value={selectedSpeaker} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
+                      <select value={selectedSpeakerId} onChange={handleSpeakerChange} className="w-full text-pink-700 border border-pink-300 rounded px-2 py-1">
                         {speakers.map((sp) => (
                           <option key={sp.id} value={sp.id}>
                             {sp.character}
@@ -206,7 +212,7 @@ export default function Header() {
                 <button onClick={() => setChatModalOpen(true)} className="px-4 py-2 rounded-full text-pink-700 font-semibold hover:text-pink-500 hover:scale-110 transition">
                   AIちゃんと会話
                 </button>
-                <select id="voice-speaker-select" value={selectedSpeaker} onChange={handleSpeakerChange} className="text-gray-900 rounded border border-pink-400 bg-pink-50 text-pink-700 px-3 py-1 cursor-pointer hover:bg-pink-100 transition">
+                <select id="voice-speaker-select" value={selectedSpeakerId} onChange={handleSpeakerChange} className="text-gray-900 rounded border border-pink-400 bg-pink-50 text-pink-700 px-3 py-1 cursor-pointer hover:bg-pink-100 transition">
                   <option value="" disabled hidden>
                     声を選択
                   </option>
@@ -255,11 +261,11 @@ export default function Header() {
 
       {/* モーダル */}
       <SignUpModal isOpen={isSignUpModalOpen} onClose={() => setSignUpModalOpen(false)} />
-      <ChatModal isOpen={isChatModalOpen} onClose={() => setChatModalOpen(false)} userIconUrl={userIconUrl} selectedSpeaker={selectedSpeaker} />
-      <AdminModal isOpen={isAdminModalOpen} onClose={() => setAdminModalOpen(false)} selectedSpeaker={selectedSpeaker} />
+      <ChatModal isOpen={isChatModalOpen} onClose={() => setChatModalOpen(false)} userIconUrl={userIconUrl} selectedSpeakerId={selectedSpeakerId} />
+      <AdminModal isOpen={isAdminModalOpen} onClose={() => setAdminModalOpen(false)} selectedSpeakerId={selectedSpeakerId} />
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setLoginModalOpen(false)} />
       {user && <SettingModal isOpen={isSettingModalOpen} onClose={() => setSettingModalOpen(false)} userId={user.id} currentName={user.name} currentIconUrl={userIconUrl} onUpdateSuccess={() => {}} />}
-      <AISetting isOpen={isAISettingModalOpen} onClose={() => setAISettingModalOpen(false)} selectedSpeaker={selectedSpeaker} />
+      <AISetting isOpen={isAISettingModalOpen} onClose={() => setAISettingModalOpen(false)} selectedSpeakerId={selectedSpeakerId} selectedSpeakerCharacter={selectedSpeakerCharacter} />
     </div>
   );
 }

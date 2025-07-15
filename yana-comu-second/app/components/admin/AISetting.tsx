@@ -5,19 +5,23 @@ import { useState, useEffect } from "react";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  selectedSpeaker: number;
+  selectedSpeakerId: number;
+  selectedSpeakerCharacter: String;
 }
 
-export default function AISetting({ isOpen, onClose, selectedSpeaker }: Props) {
+export default function AISetting({ isOpen, onClose, selectedSpeakerId, selectedSpeakerCharacter }: Props) {
   const [name, setName] = useState<string>("");
   const [prompt, setPrompt] = useState<string>("");
   const [editPrompt, setEditPrompt] = useState<string>("");
   const [mode, setMode] = useState<"list" | "edit">("list");
 
-  useEffect(() => {
-    if (!selectedSpeaker) return;
+  console.log("test");
+  console.log(selectedSpeakerId);
 
-    fetch(`http://localhost:8000/speaker_prompt/${selectedSpeaker}`)
+  useEffect(() => {
+    if (!selectedSpeakerId) return;
+
+    fetch(`http://localhost:8000/speaker_prompt/${selectedSpeakerId}`)
       .then((res) => res.json())
       .then((data) => {
         setName(data.name);
@@ -28,15 +32,15 @@ export default function AISetting({ isOpen, onClose, selectedSpeaker }: Props) {
         console.log("プロンプト取得エラー", e);
         setPrompt("");
       });
-  }, [selectedSpeaker]);
+  }, [selectedSpeakerId]);
 
   const handleSave = () => {
-    fetch(`http://localhost:8000/speaker_prompt/${selectedSpeaker}`, {
+    fetch(`http://localhost:8000/speaker_prompt/${selectedSpeakerId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt: editPrompt }),
+      body: JSON.stringify({ id: selectedSpeakerId, name: selectedSpeakerCharacter, prompt: editPrompt }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("保存に失敗しました");
@@ -73,12 +77,12 @@ export default function AISetting({ isOpen, onClose, selectedSpeaker }: Props) {
         {/* 内容 */}
         {mode === "list" ? (
           <div>
-            <h2 className="text-lg font-bold text-pink-600 mb-2">{name}のプロンプト</h2>
+            <h2 className="text-lg font-bold text-pink-600 mb-2">{name ? name : selectedSpeakerCharacter}のプロンプト</h2>
             <p className="text-gray-800 whitespace-pre-wrap">{prompt || "プロンプトが設定されていません。"}</p>
           </div>
         ) : (
           <div>
-            <h2 className="text-lg font-bold text-pink-600 mb-2">{name}のプロンプトを編集</h2>
+            <h2 className="text-lg font-bold text-pink-600 mb-2">{name ? name : selectedSpeakerCharacter}のプロンプトを編集</h2>
             <textarea value={editPrompt} onChange={(e) => setEditPrompt(e.target.value)} className="w-full h-40 p-2 border border-gray-300 rounded mb-4" />
             <button onClick={handleSave} className="bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded">
               保存
